@@ -114,6 +114,13 @@ obj <- MakeADFun(data, parameters)
 checkSimulation(obj)
 
 ######################################################################
+
+data <- list(distr="lnorm", n=n)
+parameters <- list(meanlog=0, sdlog=1)
+obj <- MakeADFun(data, parameters)
+checkSimulation(obj)
+
+######################################################################
 data <- list(distr="AR1", n=n)
 parameters <- list(phi = .2)
 obj <- MakeADFun(data, parameters)

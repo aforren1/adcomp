@@ -643,6 +643,23 @@ T1 dcompois2(T1 x, T2 mean, T3 nu, int give_log = 0) {
   return ( give_log ? ans : exp(ans) );
 }
 
+/**	\brief Probability density function of the log normal distribution.
+	\ingroup R_style_distribution
+	\param meanlog Mean parameter of the distribution on the log scale.
+  \param sdlog Standard deviation of the distribution on the log scale.
+	\param give_log true if one wants the log-probability, false otherwise.
+	*/
+template<class Type>
+Type dlnorm(Type x, Type meanlog, Type sdlog, int give_log = 0)
+{
+  Type y = (log(x) - meanlog) / sdlog;
+  if (give_log)
+    return CppAD::CondExpGt(x, Type(0), -(log(sqrt(Type(2 * M_PI))) + log(sdlog * x) + Type(0.5) * y * y), Type(-INFINITY));
+  else
+    return CppAD::CondExpGt(x, Type(0), Type(1) / sqrt(Type(2 * M_PI)) * exp(Type(-0.5) * y * y) / (x * sdlog), Type(0));
+}
+VECTORIZE4_ttti(dlnorm)
+
 /********************************************************************/
 /* SIMULATON CODE                                                   */
 /********************************************************************/
@@ -815,3 +832,12 @@ vector<Type> rcompois2(int n, Type mean, Type nu)
   Type mode = exp(loglambda / nu);
   return rcompois(n, mode, nu);
 }
+
+/** \brief Simulate from a log normal distribution  */
+template<class Type>
+Type rlnorm(Type meanlog, Type sdlog)
+{
+  return exp(rnorm(meanlog, sdlog));
+}
+VECTORIZE2_tt(rlnorm)
+VECTORIZE2_n(rlnorm)

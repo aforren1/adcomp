@@ -82,6 +82,12 @@ Type objective_function<Type>::operator() ()
     vector<Type> x = rweibull(n, shape, scale);
     ans -= dweibull(x, shape, scale, true).sum();
   }
+  else if (distr == "lnorm") {
+    PARAMETER(meanlog);
+    PARAMETER(sdlog);
+    vector<Type> x = rlnorm(n, meanlog, sdlog);
+    ans -= dlnorm(x, meanlog, sdlog, true).sum();
+  }
   else if (distr == "AR1") {
     PARAMETER(phi);
     vector<Type> x(n);

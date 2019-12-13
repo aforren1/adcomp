@@ -24,5 +24,7 @@
 | dgamma(x,shape=p1,scale=p2)             | dgamma(x,p1,p2,false)    |
 | dgamma(x,shape=p1,scale=p2,log=TRUE)    | dgamma(x,p1,p2,true)     |
 | dpois(x,lambda=p1,log=TRUE)             | dpois(x,p1,true)         |
+| dlnorm(x,meanlog=p1,sdlog=p2,log=FALSE) | dlnorm(x,p1,p2,false)    |
+| dlnorm(x,meanlog=p1,sdlog=p2,log=TRUE)  | dlnorm(x,p1,p2,true)     |
 # Note: Vectorize macros does not set default give_log=0
 # Note: New Vectorize macros should be used with old distributions. 
