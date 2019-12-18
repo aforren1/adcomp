@@ -652,11 +652,16 @@ T1 dcompois2(T1 x, T2 mean, T3 nu, int give_log = 0) {
 template<class Type>
 Type dlnorm(Type x, Type meanlog, Type sdlog, int give_log = 0)
 {
-  Type y = (log(x) - meanlog) / sdlog;
   if (give_log)
-    return CppAD::CondExpGt(x, Type(0), -(log(sqrt(Type(2 * M_PI))) + log(sdlog * x) + Type(0.5) * y * y), Type(-INFINITY));
+    return CppAD::CondExpGt(x, Type(0),
+                            [](Type x, Type meanlog, Type sdlog) {Type y = (log(x) - meanlog) / sdlog;
+                              return -(log(sqrt(Type(2 * M_PI))) + log(sdlog * x) + Type(0.5) * y * y); }(x, meanlog, sdlog),
+                            Type(-INFINITY));
   else
-    return CppAD::CondExpGt(x, Type(0), Type(1) / sqrt(Type(2 * M_PI)) * exp(Type(-0.5) * y * y) / (x * sdlog), Type(0));
+    return CppAD::CondExpGt(x, Type(0),
+                            [](Type x, Type meanlog, Type sdlog) {Type y = (log(x) - meanlog) / sdlog;
+                                return Type(1) / sqrt(Type(2 * M_PI)) * exp(Type(-0.5) * y * y) / (x * sdlog); }(x, meanlog, sdlog),
+                            Type(0));
 }
 VECTORIZE4_ttti(dlnorm)
 
